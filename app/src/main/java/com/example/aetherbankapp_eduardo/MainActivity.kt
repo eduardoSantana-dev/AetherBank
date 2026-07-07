@@ -11,6 +11,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import com.example.aetherbankapp_eduardo.telas.Home
 import com.example.aetherbankapp_eduardo.ui.theme.AetherBankAppeduardoTheme
 
 class MainActivity : ComponentActivity() {
@@ -19,12 +20,9 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             AetherBankAppeduardoTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Greeting(
-                        name = "Android",
-                        modifier = Modifier.padding(innerPadding)
-                    )
-                }
+
+                   Home()
+
             }
         }
     }
@@ -42,6 +40,6 @@ fun Greeting(name: String, modifier: Modifier = Modifier) {
 @Composable
 fun GreetingPreview() {
     AetherBankAppeduardoTheme {
-        Greeting("Android")
+        Home()
     }
 }
