@@ -1,6 +1,5 @@
 package com.example.aetherbankapp_eduardo.telas
 
-import android.R.id.primary
 import android.content.res.Configuration
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -16,9 +15,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material.icons.filled.Pix
 import androidx.compose.material.icons.filled.RemoveRedEye
@@ -30,9 +27,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -41,36 +36,36 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.aetherbankapp_eduardo.Greeting
+
 import com.example.aetherbankapp_eduardo.R
 import com.example.aetherbankapp_eduardo.ui.theme.AetherBankAppeduardoTheme
 import com.example.aetherbankapp_eduardo.ui.theme.Azul
 import com.example.aetherbankapp_eduardo.ui.theme.Verde
-import org.w3c.dom.Text
 
-
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
+import com.example.aetherbankapp_eduardo.navigation.Routes
 @Composable
-fun Home(){
+fun Home(navController: NavHostController) {
     AetherBankAppeduardoTheme {
         Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
             Tela(
-                modifier = Modifier.padding(innerPadding)
+                modifier = Modifier.padding(innerPadding),
+                navController = navController
             )
         }
     }
 }
 
 @Composable
-fun Tela(modifier: Modifier){
+fun Tela(modifier: Modifier, navController: NavHostController){
     var saldo by remember { mutableStateOf("12.200.67") }
     var saldoView by remember { mutableStateOf("••••") }
     fun verSaldo(){
@@ -163,7 +158,7 @@ fun Tela(modifier: Modifier){
            ){
               Column(horizontalAlignment = Alignment.CenterHorizontally) {
                   Button(
-                      onClick = {},
+                      onClick = {navController.navigate(Routes.PagarChave.route)},
                       colors = ButtonDefaults.buttonColors(containerColor = Azul.copy(alpha = 0.2f)),
 
                       modifier = Modifier.padding(top = 25.dp)
@@ -282,14 +277,20 @@ fun Tela(modifier: Modifier){
     uiMode = Configuration.UI_MODE_NIGHT_YES
 )
 @Composable
-fun Preview(){
+fun Preview() {
+
+    val navController = rememberNavController()
+
     AetherBankAppeduardoTheme {
         Scaffold(
             modifier = Modifier.fillMaxSize()
         ) { innerPadding ->
+
             Tela(
-                modifier = Modifier.padding(innerPadding)
+                modifier = Modifier.padding(innerPadding),
+                navController = navController
             )
+
         }
     }
 }

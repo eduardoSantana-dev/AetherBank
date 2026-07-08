@@ -12,6 +12,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 
+import androidx.compose.material3.Typography
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
 private val DarkColorScheme = darkColorScheme(
     primary = Purple80,
     secondary = PurpleGrey80,
@@ -54,7 +57,18 @@ fun AetherBankAppeduardoTheme(
 
     MaterialTheme(
         colorScheme = colorScheme,
-        typography = Typography,
+        typography = Typography(
+            bodyLarge = TextStyle(
+                fontFamily = Montserrat
+            ),
+            bodyMedium = TextStyle(
+                fontFamily = Montserrat
+            ),
+            titleLarge = TextStyle(
+                fontFamily = Montserrat,
+                fontWeight = FontWeight.Bold
+            )
+        ),
         content = content
     )
 }
