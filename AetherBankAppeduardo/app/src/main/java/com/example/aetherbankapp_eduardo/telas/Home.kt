@@ -52,6 +52,15 @@ import com.example.aetherbankapp_eduardo.ui.theme.Verde
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.example.aetherbankapp_eduardo.navigation.Routes
+import io.ktor.client.*
+import io.ktor.client.engine.cio.*
+import io.ktor.client.request.*
+import kotlinx.coroutines.runBlocking
+import io.ktor.client.call.body
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+
 @Composable
 fun Home(navController: NavHostController) {
     AetherBankAppeduardoTheme {
@@ -64,9 +73,23 @@ fun Home(navController: NavHostController) {
     }
 }
 
+
+
 @Composable
-fun Tela(modifier: Modifier, navController: NavHostController){
+fun Tela(modifier: Modifier, navController: NavHostController) {
+
+
+
     var saldo by remember { mutableStateOf("12.200.67") }
+    fun buscarSaldo() = runBlocking{
+        val client =  HttpClient(CIO)
+        CoroutineScope(Dispatchers.IO).launch {
+            val result = client.get("http://192.168.0.9:8080/BuscarSaldo/1")
+            saldo = result.body<String>()
+            client.close()
+        }
+    }
+    buscarSaldo()
     var saldoView by remember { mutableStateOf("••••") }
     fun verSaldo(){
         if(saldoView == "••••"){
@@ -271,6 +294,7 @@ fun Tela(modifier: Modifier, navController: NavHostController){
         }
 
     }
+
 }
 @Preview(
     showBackground = true,

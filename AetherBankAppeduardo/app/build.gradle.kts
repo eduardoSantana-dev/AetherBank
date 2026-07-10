@@ -38,6 +38,8 @@ android {
 }
 
 dependencies {
+    implementation("io.ktor:ktor-client-core:2.3.12")
+    implementation("io.ktor:ktor-client-cio:2.3.12")
     implementation("androidx.navigation:navigation-compose:2.9.3")
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.activity.compose)

@@ -18,7 +18,7 @@ fun NavGraph() {
 
     NavHost(
         navController = navController,
-        startDestination = Routes.Pagamento.route,
+        startDestination = Routes.Home.route,
         enterTransition = {
             slideIntoContainer(
                 AnimatedContentTransitionScope.SlideDirection.Left,
