@@ -1,4 +1,4 @@
-package com.example.aetherbankapp_eduardo.telas
+package com.example.aetherbankapp_eduardo.screens
 
 import android.content.res.Configuration
 import androidx.compose.foundation.Image

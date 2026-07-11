@@ -1,4 +1,4 @@
-package com.example.aetherbankapp_eduardo.telas
+package com.example.aetherbankapp_eduardo.screens
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
