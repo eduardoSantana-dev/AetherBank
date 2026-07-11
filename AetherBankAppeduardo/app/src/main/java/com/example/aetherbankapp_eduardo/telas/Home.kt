@@ -89,7 +89,7 @@ fun Tela(modifier: Modifier, navController: NavHostController) {
             client.close()
         }
     }
-    buscarSaldo()
+
     var saldoView by remember { mutableStateOf("••••") }
     fun verSaldo(){
         if(saldoView == "••••"){

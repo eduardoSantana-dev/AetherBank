@@ -7,6 +7,8 @@ sealed class Routes(val route: String) {
     object PagarChave : Routes("pagarChave")
 
     object Pagamento : Routes("pagamento")
+    object Cadastro : Routes("cadastro")
+    object Login : Routes("login")
 
 
 }

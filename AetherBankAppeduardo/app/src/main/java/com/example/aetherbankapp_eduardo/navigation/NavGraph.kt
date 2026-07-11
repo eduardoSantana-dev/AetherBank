@@ -10,6 +10,8 @@ import com.example.aetherbankapp_eduardo.telas.PagarChave
 import androidx.compose.animation.core.tween
 import androidx.navigation.compose.composable
 import com.example.aetherbankapp_eduardo.telas.Pagamento
+import com.example.aetherbankapp_eduardo.telas.Cadastro
+import com.example.aetherbankapp_eduardo.telas.Login
 
 @Composable
 fun NavGraph() {
@@ -18,7 +20,7 @@ fun NavGraph() {
 
     NavHost(
         navController = navController,
-        startDestination = Routes.Home.route,
+        startDestination = Routes.Cadastro.route,
         enterTransition = {
             slideIntoContainer(
                 AnimatedContentTransitionScope.SlideDirection.Left,
@@ -54,6 +56,13 @@ fun NavGraph() {
 
         composable(Routes.Pagamento.route) {
             Pagamento(navController)
+        }
+
+        composable(Routes.Cadastro.route) {
+            Cadastro(navController)
+        }
+        composable(Routes.Login.route) {
+            Login(navController)
         }
     }
 }
