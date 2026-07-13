@@ -11,3 +11,8 @@ data class CredenciaisResponse(
     val numero: String?,
 )
 
+
+data class LoginResponse(
+    val message: String?,
+    val token: String?,
+)

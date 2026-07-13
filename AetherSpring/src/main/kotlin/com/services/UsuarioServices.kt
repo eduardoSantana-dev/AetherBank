@@ -4,14 +4,22 @@ import com.database.model.UsuarioModel
 import com.dtos.RegistroRequest
 import com.dtos.CredenciaisResponse
 import com.dtos.LoginRequest
+import com.dtos.LoginResponse
 import com.repository.UsuarioRepository
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
+import org.springframework.security.authentication.AuthenticationManager
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.stereotype.Service
 import javax.xml.crypto.Data
 import org.springframework.security.crypto.argon2.Argon2PasswordEncoder
+
 @Service
-class UsuarioServices (private val repository: UsuarioRepository){
+class UsuarioServices (
+    private val repository: UsuarioRepository,
+    private val authenticationManager: AuthenticationManager,
+    private val tokenService: TokenService
+){
     fun registrar(user: RegistroRequest): ResponseEntity<CredenciaisResponse>{
         val encoder = Argon2PasswordEncoder.defaultsForSpringSecurity_v5_8()
         val senha = encoder.encode(user.senha)
@@ -33,25 +41,19 @@ class UsuarioServices (private val repository: UsuarioRepository){
             numero = resposta.numero
         ))
     }
-    fun logar(login: LoginRequest): ResponseEntity<CredenciaisResponse>{
+    fun logar(login: LoginRequest): ResponseEntity<LoginResponse>{
         val encoder = Argon2PasswordEncoder.defaultsForSpringSecurity_v5_8()
-
-        val usuario = repository.findByEmail(login.email)
-        val valido = encoder.matches(login.password, usuario?.senha)
-        if(valido){
-        return ResponseEntity.status(HttpStatus.OK).body(CredenciaisResponse(
-            message = "Achamo o cara",
-            id = 5,
-            nome = usuario?.nome,
-            email = usuario?.email,
-            cpf = usuario?.cpf,
-            numero = usuario?.numero
+        val usernamePassword = UsernamePasswordAuthenticationToken(
+            login.email,
+            login.password
+        )
+        val auth = authenticationManager.authenticate(usernamePassword)
+        var token = tokenService.gerarToken(auth.principal as UsuarioModel)
+        return ResponseEntity.status(HttpStatus.OK).body(LoginResponse(
+            message = "Usuario logado com sucesso",
+            token = token
         ))
-        }
-        else{
-            return ResponseEntity
-                .status(HttpStatus.UNAUTHORIZED)
-                .build()
-        }
+
+
     }
 }
