@@ -2,9 +2,13 @@ package com.example.aetherbankapp_eduardo.screens
 
 
 
+import android.R.attr.alpha
+import android.graphics.Color.alpha
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -16,6 +20,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -59,7 +64,10 @@ fun TelaLogin(modifier: Modifier, navController: NavHostController, vm: LoginVie
     if(vm.logado){
         navController.navigate(Routes.Home.route)
     }
+
+
     Surface(modifier = Modifier.fillMaxSize()){
+
         Column(modifier = Modifier.fillMaxSize(), horizontalAlignment =Alignment.CenterHorizontally, verticalArrangement = Arrangement.Center) {
             Row(modifier = Modifier.height(130.dp)){
 
@@ -132,15 +140,28 @@ fun TelaLogin(modifier: Modifier, navController: NavHostController, vm: LoginVie
                     },
                     confirmButton = {
                         Button(
+                            colors = ButtonDefaults.buttonColors(containerColor = Azul),
                             onClick = {
                                 vm.fechar()
                             }
                         ) {
-                            Text("OK")
+                            Text(
+                                text = "OK",
+                                color =Color.White
+                            )
                         }
                     }
                 )
 
+            }
+        }
+        if(vm.loading){
+            Box(
+                modifier = Modifier.fillMaxSize().background(Color.Black.copy(alpha =0.5f)),
+                contentAlignment = Alignment.Center,
+
+                ){
+                CircularProgressIndicator(color = Azul)
             }
         }
     }

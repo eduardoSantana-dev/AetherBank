@@ -13,33 +13,41 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.stereotype.Service
 import javax.xml.crypto.Data
 import org.springframework.security.crypto.argon2.Argon2PasswordEncoder
-
+import com.services.ContaServices
 @Service
 class UsuarioServices (
     private val repository: UsuarioRepository,
     private val authenticationManager: AuthenticationManager,
-    private val tokenService: TokenService
+    private val tokenService: TokenService,
+    private val contaService: ContaServices,
 ){
     fun registrar(user: RegistroRequest): ResponseEntity<CredenciaisResponse>{
         val encoder = Argon2PasswordEncoder.defaultsForSpringSecurity_v5_8()
         val senha = encoder.encode(user.senha)
-        val novoUser = UsuarioModel(
-            nome = user.nome,
-            email = user.email,
-            cpf = user.cpf,
-            numero = user.numero,
-            senha = senha!!,
-            chaveAleatoria = null
-        )
-        val resposta = repository.save(novoUser)
-        return ResponseEntity.status(HttpStatus.OK).body(CredenciaisResponse(
-            message = "Usuario cadastrado com sucesso",
-            id = resposta.id,
-            nome = resposta.nome,
-            email = resposta.email,
-            cpf = resposta.cpf,
-            numero = resposta.numero
-        ))
+        try {
+            val novoUser = UsuarioModel(
+                nome = user.nome,
+                email = user.email,
+                cpf = user.cpf,
+                numero = user.numero,
+                senha = senha!!,
+                chaveAleatoria = null
+            )
+            val resposta = repository.save(novoUser)
+            val criarConta = contaService.criarConta(resposta)
+
+            return ResponseEntity.status(HttpStatus.OK).body(CredenciaisResponse(
+                message = "Usuario cadastrado com sucesso",
+                id = resposta.id,
+                nome = resposta.nome,
+                email = resposta.email,
+                cpf = resposta.cpf,
+                numero = resposta.numero
+            ))
+
+        }catch (e : Exception){
+            return ResponseEntity(HttpStatus.UNAUTHORIZED)
+        }
     }
     fun logar(login: LoginRequest): ResponseEntity<LoginResponse>{
         val encoder = Argon2PasswordEncoder.defaultsForSpringSecurity_v5_8()

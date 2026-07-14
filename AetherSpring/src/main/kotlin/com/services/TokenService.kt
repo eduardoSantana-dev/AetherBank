@@ -13,7 +13,7 @@ import java.time.Instant
 
 @Service
 class TokenService(
-    @Value("{api.security.token.secret}")
+    @Value("\${api.security.token.secret}")
     private val secret: String
 
 ) {
@@ -44,6 +44,6 @@ class TokenService(
         }
     }
     fun dataDeExpiracao(): Instant{
-            return LocalDateTime.now().plusHours(2).toInstant(ZoneOffset.of("-03:00"))
+            return LocalDateTime.now().plusMinutes(30).toInstant(ZoneOffset.of("-03:00"))
     }
 }

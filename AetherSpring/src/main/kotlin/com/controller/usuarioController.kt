@@ -16,13 +16,15 @@ import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 
-class usuario(
-    val nome: String,
-    val idade: Int
-)
+
 @RestController
 @RequestMapping("/usuarios")
 class ApiUser(private val services: UsuarioServices){
+    @GetMapping("/validar")
+    fun validar(): ResponseEntity<Void>{
+        return ResponseEntity.ok().build()
+    }
+
         @PostMapping("/auth/registrar")
         fun registrar(@RequestBody user : RegistroRequest): ResponseEntity<CredenciaisResponse>{
             return services.registrar(user)

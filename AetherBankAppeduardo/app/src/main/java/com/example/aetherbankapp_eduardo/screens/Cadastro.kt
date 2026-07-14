@@ -134,6 +134,7 @@ fun TelaCadastro(modifier: Modifier, navController: NavHostController, vm : Cada
                     },
                     confirmButton = {
                         Button(
+                            colors = ButtonDefaults.buttonColors(containerColor = Azul),
                             onClick = {
                                 vm.fechar()
                             }

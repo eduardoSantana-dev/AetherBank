@@ -16,6 +16,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ExitToApp
 import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material.icons.filled.Pix
 import androidx.compose.material.icons.filled.RemoveRedEye
@@ -43,6 +44,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 
 import com.example.aetherbankapp_eduardo.R
 import com.example.aetherbankapp_eduardo.ui.theme.AetherBankAppeduardoTheme
@@ -52,6 +54,7 @@ import com.example.aetherbankapp_eduardo.ui.theme.Verde
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.example.aetherbankapp_eduardo.navigation.Routes
+import com.example.aetherbankapp_eduardo.viewModel.HomeViewModel
 import io.ktor.client.*
 import io.ktor.client.engine.cio.*
 import io.ktor.client.request.*
@@ -76,29 +79,13 @@ fun Home(navController: NavHostController) {
 
 
 @Composable
-fun Tela(modifier: Modifier, navController: NavHostController) {
+fun Tela(modifier: Modifier, navController: NavHostController, vm: HomeViewModel = viewModel() ) {
 
-
-
-    var saldo by remember { mutableStateOf("12.200.67") }
-
-    fun buscarSaldo() = runBlocking{
-        val client =  HttpClient(CIO)
-        CoroutineScope(Dispatchers.IO).launch {
-            val result = client.get("http://192.168.0.9:8080/BuscarSaldo/1")
-            saldo = result.body<String>()
-            client.close()
+        if(vm.navegarParaLogin){
+            navController.navigate(Routes.Login.route)
         }
-    }
 
-    var saldoView by remember { mutableStateOf("••••") }
-    fun verSaldo(){
-        if(saldoView == "••••"){
-                saldoView = saldo
-        }else{
-            saldoView = "••••"
-        }
-    }
+
 
     Surface(modifier = Modifier.fillMaxSize()){
         Column() {
@@ -126,11 +113,11 @@ fun Tela(modifier: Modifier, navController: NavHostController) {
                         padding(bottom =20.dp)
                     )
                     Row(horizontalArrangement = Arrangement.SpaceAround,
-                        modifier =  Modifier.width(100.dp)
+                        modifier =  Modifier.width(120.dp)
 
                     ){
                         Button(
-                            onClick = {verSaldo()},
+                            onClick = {vm.verSaldo()},
                             colors = ButtonDefaults.buttonColors(containerColor = Color.White),
                             modifier = Modifier.padding(top = 25.dp)
                                 .width(33.dp).height(33.dp),
@@ -151,6 +138,17 @@ fun Tela(modifier: Modifier, navController: NavHostController) {
                             contentDescription = "Home",
                             tint = Color.Black
                         )}
+                        Button(
+                            onClick = {vm.Logoff()},
+                            colors = ButtonDefaults.buttonColors(containerColor = Color.White),
+                            modifier = Modifier.padding(top = 25.dp)
+                                .width(33.dp).height(33.dp),
+                            contentPadding = PaddingValues(0.dp)
+                        ) { Icon(
+                            imageVector = Icons.Default.ExitToApp,
+                            contentDescription = "Home",
+                            tint = Color.Black
+                        )}
                     }
                 }
                 Column(
@@ -164,7 +162,7 @@ fun Tela(modifier: Modifier, navController: NavHostController) {
 
                     )
                     Text(
-                        text = "R$ "+ saldoView,
+                        text = vm.saldoView,
                         modifier = Modifier.padding(top = 5.dp),
                         fontWeight = FontWeight(900),
                         color = Color.White,
