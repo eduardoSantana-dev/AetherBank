@@ -62,7 +62,11 @@ fun Login(navController: NavHostController){
 @Composable
 fun TelaLogin(modifier: Modifier, navController: NavHostController, vm: LoginViewModel = viewModel()){
     if(vm.logado){
-        navController.navigate(Routes.Home.route)
+        navController.navigate(Routes.Home.route){
+            popUpTo(0) {
+                inclusive = true
+            }
+        }
     }
 
 

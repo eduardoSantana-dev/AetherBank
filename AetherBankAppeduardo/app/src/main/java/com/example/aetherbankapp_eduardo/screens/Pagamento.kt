@@ -13,6 +13,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBackIos
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
@@ -36,11 +37,14 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.example.aetherbankapp_eduardo.navigation.Routes
 import com.example.aetherbankapp_eduardo.ui.theme.AetherBankAppeduardoTheme
 import com.example.aetherbankapp_eduardo.ui.theme.Azul
+import com.example.aetherbankapp_eduardo.viewModel.LoginViewModel
+import com.example.aetherbankapp_eduardo.viewModel.PagamentoViewModel
 
 @Composable
 fun Pagamento( navController: NavHostController){
@@ -54,10 +58,13 @@ fun Pagamento( navController: NavHostController){
     }
 }
 @Composable
-fun tela3(modifier: Modifier,navController:NavHostController){
-    val chave = navController.previousBackStackEntry
+fun tela3(modifier: Modifier,navController:NavHostController,vm: PagamentoViewModel = viewModel()){
+    val chaveGet = navController.previousBackStackEntry
         ?.savedStateHandle?.get<String>("chave")
-    var inputValue by remember { mutableStateOf("") }
+
+    if(chaveGet != null){
+        vm.getChave(chaveGet)
+    }
 
     Column(modifier = Modifier.padding(15.dp)) {
         Button(
@@ -81,14 +88,14 @@ fun tela3(modifier: Modifier,navController:NavHostController){
             modifier = Modifier.padding(top =20.dp)
         )
         Text(
-            text = "Eduardo Santana Santos",
+            text = vm.nomeFavorecido,
             fontWeight = FontWeight.SemiBold,
             fontSize = 15.sp,
             modifier = Modifier.padding(top =20.dp),
 
         )
         Text(
-            text = chave?:"**********",
+            text = vm.chave,
             fontWeight = FontWeight.Medium,
             fontSize = 13.sp,
             modifier = Modifier.padding(top =0.dp),
@@ -102,8 +109,8 @@ fun tela3(modifier: Modifier,navController:NavHostController){
 
             )
             OutlinedTextField(
-                value = inputValue,
-                onValueChange = { inputValue = it },
+                value = vm.inputValue,
+                onValueChange = vm::onChangeValue ,
 
                 placeholder = {
                     Text(
@@ -140,7 +147,7 @@ fun tela3(modifier: Modifier,navController:NavHostController){
                .alpha(0.5f)
            )
            Text(
-               text = " R$ 15.000,67",
+               text = vm.saldo,
                fontWeight = FontWeight.SemiBold,
                fontSize = 13.sp,
                modifier = Modifier.padding(top =0.dp),
@@ -148,7 +155,7 @@ fun tela3(modifier: Modifier,navController:NavHostController){
            )
        }
         Button(
-            onClick = {},
+            onClick = {vm.transferir()},
             colors = ButtonDefaults.buttonColors(containerColor = Azul),
             modifier = Modifier
                 .fillMaxWidth()
@@ -165,7 +172,83 @@ fun tela3(modifier: Modifier,navController:NavHostController){
             )
         }
     }
+    if (vm.mostrarErro) {
 
+        AlertDialog(
+            onDismissRequest = {},
+            title = { Text("Chave inválida") },
+            text = {
+                Text("Insira uma chave válida")
+            },
+            confirmButton = {
+                Button(
+                    colors = ButtonDefaults.buttonColors(containerColor = Azul),
+                    onClick = {
+                        navController.navigate(Routes.PagarChave.route)
+                    }
+                ) {
+                    Text(
+                        text = "Voltar",
+                        color =Color.White
+                    )
+                }
+            }
+        )
+
+    }
+    if (vm.mostrarErroTrans) {
+
+        AlertDialog(
+            onDismissRequest = {},
+            title = { Text("Erro ao realizar a transferência") },
+            text = {
+                Text(vm.textErro)
+            },
+            confirmButton = {
+                Button(
+                    colors = ButtonDefaults.buttonColors(containerColor = Azul),
+                    onClick = {
+                        navController.navigate(Routes.PagarChave.route)
+                    }
+                ) {
+                    Text(
+                        text = "Voltar",
+                        color =Color.White
+                    )
+                }
+            }
+        )
+
+    }
+
+    if (vm.mostrarSucesso) {
+
+        AlertDialog(
+            onDismissRequest = {},
+            title = { Text("Transferência realizada com sucesso!") },
+            text = {
+                Text(vm.textSucesso)
+            },
+            confirmButton = {
+                Button(
+                    colors = ButtonDefaults.buttonColors(containerColor = Azul),
+                    onClick = {
+                        navController.navigate(Routes.Home.route){
+                            popUpTo(0) {
+                                inclusive = true
+                            }
+                        }
+                    }
+                ) {
+                    Text(
+                        text = "Voltar",
+                        color =Color.White
+                    )
+                }
+            }
+        )
+
+    }
 }
 
 @Preview(

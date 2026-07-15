@@ -7,5 +7,10 @@ import org.springframework.stereotype.Repository
 interface UsuarioRepository: JpaRepository<UsuarioModel,Long>{
     fun findByCpf(cpf: String): UsuarioModel
     fun findByEmail(email: String): UsuarioModel?
+    fun findByEmailOrNumeroOrCpf(
+        email: String,
+        numero: String,
+        cpf: String
+    ): UsuarioModel?
 }
 

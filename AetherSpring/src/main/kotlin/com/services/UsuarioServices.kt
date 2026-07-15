@@ -1,6 +1,8 @@
 package com.services
 
+import com.database.model.ContaModel
 import com.database.model.UsuarioModel
+import com.dtos.BuscarChaveResponse
 import com.dtos.RegistroRequest
 import com.dtos.CredenciaisResponse
 import com.dtos.LoginRequest
@@ -63,5 +65,15 @@ class UsuarioServices (
         ))
 
 
+    }
+    fun buscar(chave: String): ResponseEntity<BuscarChaveResponse>{
+        val usuario = repository.findByEmailOrNumeroOrCpf(chave,chave,chave)
+        if(usuario != null){
+            val conta = contaService.buscar(usuario)
+            if(conta != null){
+                return ResponseEntity.ok().body(BuscarChaveResponse(usuario,conta))
+            }
+        }
+        return ResponseEntity.notFound().build()
     }
 }

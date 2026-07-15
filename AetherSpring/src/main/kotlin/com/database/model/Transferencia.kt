@@ -12,9 +12,9 @@ data class TransferenciaModel(
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long = 0,
     @ManyToOne
-    val pagador: UsuarioModel,
+    val pagador: ContaModel,
     @ManyToOne
-    val favorecido: UsuarioModel,
+    val favorecido: ContaModel,
     @Column(precision = 10, scale = 2)
     val valor : BigDecimal = BigDecimal.ZERO,
     val dataTrans: LocalDateTime = LocalDateTime.now()

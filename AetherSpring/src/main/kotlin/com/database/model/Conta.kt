@@ -13,6 +13,6 @@ data class ContaModel(
         @ManyToOne
         val usuario: UsuarioModel,
         @Column(precision = 10, scale = 2)
-        val saldo : BigDecimal = BigDecimal.ZERO
+        var saldo : BigDecimal = BigDecimal.ZERO
 
 )

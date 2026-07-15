@@ -14,7 +14,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ExitToApp
 import androidx.compose.material.icons.filled.Notifications
@@ -28,6 +30,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -88,207 +91,231 @@ fun Tela(modifier: Modifier, navController: NavHostController, vm: HomeViewModel
 
 
     Surface(modifier = Modifier.fillMaxSize()){
-        Column() {
-            Column(
-                modifier = Modifier.background( color = Azul)
-                    .fillMaxWidth()
-                    .height(195.dp)
-                    .padding(start = 10.dp,end = 10.dp, top = 15.dp)
+        var refreshing by remember { mutableStateOf(false) }
 
+        PullToRefreshBox(
+            isRefreshing = refreshing,
+            onRefresh = {
+                refreshing = true
 
-            ) {
-                Row(
-                    horizontalArrangement = Arrangement.SpaceBetween
-                    ,modifier = Modifier.fillMaxWidth().height(100.dp)
-
-                ){
-                    Image(
-                        painter = painterResource(R.drawable.logo),
-                        contentDescription = "Logo",
-                        contentScale = ContentScale.Fit,
-                        alignment = Alignment.Center,
-                        alpha = 1f,
-                        colorFilter = null ,
-                        modifier = Modifier.size(133.dp).
-                        padding(bottom =20.dp)
-                    )
-                    Row(horizontalArrangement = Arrangement.SpaceAround,
-                        modifier =  Modifier.width(120.dp)
-
-                    ){
-                        Button(
-                            onClick = {vm.verSaldo()},
-                            colors = ButtonDefaults.buttonColors(containerColor = Color.White),
-                            modifier = Modifier.padding(top = 25.dp)
-                                .width(33.dp).height(33.dp),
-                            contentPadding = PaddingValues(0.dp)
-                        ) { Icon(
-                            imageVector = Icons.Default.RemoveRedEye,
-                            contentDescription = "Home",
-                            tint = Color.Black
-                        )}
-                        Button(
-                            onClick = {},
-                            colors = ButtonDefaults.buttonColors(containerColor = Color.White),
-                            modifier = Modifier.padding(top = 25.dp)
-                                .width(33.dp).height(33.dp),
-                            contentPadding = PaddingValues(0.dp)
-                        ) { Icon(
-                            imageVector = Icons.Default.Notifications,
-                            contentDescription = "Home",
-                            tint = Color.Black
-                        )}
-                        Button(
-                            onClick = {vm.Logoff()},
-                            colors = ButtonDefaults.buttonColors(containerColor = Color.White),
-                            modifier = Modifier.padding(top = 25.dp)
-                                .width(33.dp).height(33.dp),
-                            contentPadding = PaddingValues(0.dp)
-                        ) { Icon(
-                            imageVector = Icons.Default.ExitToApp,
-                            contentDescription = "Home",
-                            tint = Color.Black
-                        )}
-                    }
-                }
-                Column(
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    Text(
-                        text = "Saldo em conta",
-                        modifier = Modifier.alpha(0.6F),
-                        color = Color.White,
-                        fontWeight = FontWeight(500)
-
-                    )
-                    Text(
-                        text = vm.saldoView,
-                        modifier = Modifier.padding(top = 5.dp),
-                        fontWeight = FontWeight(900),
-                        color = Color.White,
-                        fontSize = 35.sp
-
-                    )
-
+                navController.navigate(Routes.Home.route){
+                    popUpTo(0)
                 }
 
+                refreshing = false
             }
-           Row(
-               horizontalArrangement = Arrangement.SpaceAround,
-                modifier = Modifier.fillMaxWidth()
+        ) {
+            Column() {
+                Column(
+                    modifier = Modifier.background(color = Azul)
+                        .fillMaxWidth()
+                        .height(195.dp)
+                        .padding(start = 10.dp, end = 10.dp, top = 15.dp)
 
-           ){
-              Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                  Button(
-                      onClick = {navController.navigate(Routes.PagarChave.route)},
-                      colors = ButtonDefaults.buttonColors(containerColor = Azul.copy(alpha = 0.2f)),
-
-                      modifier = Modifier.padding(top = 25.dp)
-                          .width(68.dp).height(68.dp)
-                      ,
-                      contentPadding = PaddingValues(0.dp)
-                  ) { Icon(
-                      imageVector = Icons.Default.Pix,
-                      contentDescription = "Home",
-                      tint = Azul,
-                      modifier = Modifier.size(42.dp)
-                  )}
-                  Text(
-                      text = "Transferência",
-                      fontWeight = FontWeight(600),
-                      color = Azul,
-                      fontSize = 15.sp,
-                      modifier = Modifier.padding(top = 5.dp)
-                  )
-              }
-               Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                   Button(
-                       onClick = {},
-                       colors = ButtonDefaults.buttonColors(containerColor = Azul.copy(alpha = 0.2f)),
-
-                       modifier = Modifier.padding(top = 25.dp)
-                           .width(68.dp).height(68.dp)
-                       ,
-                       contentPadding = PaddingValues(0.dp)
-                   ) { Icon(
-                       imageVector = Icons.Default.Wallet,
-                       contentDescription = "Home",
-                       tint = Azul,
-                       modifier = Modifier.size(42.dp)
-                   )}
-                   Text(
-                       text = "Receber",
-                       fontWeight = FontWeight(600),
-                       color = Azul,
-                       fontSize = 15.sp,
-                       modifier = Modifier.padding(top = 5.dp)
-                   )
-               }
-           }
-            Column(
-                modifier = Modifier.padding(start = 10.dp, end =10.dp, top = 20.dp)
-            ) {
-                Text(
-                    text = "Últimas transações",
-                    fontWeight = FontWeight(500),
-                    color = MaterialTheme.colorScheme.tertiary,
-                    fontSize = 20.sp,
-                    modifier = Modifier.padding(top = 5.dp)
-                )
-
-                LazyColumn (
-                    modifier = Modifier.padding(top = 25.dp),
-                    verticalArrangement = Arrangement.spacedBy(16.dp)
+                        .verticalScroll(rememberScrollState())
                 ) {
+                    Row(
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        modifier = Modifier.fillMaxWidth().height(100.dp)
 
-                    items(20) { teste ->
-                        Column(
-                            modifier = Modifier.fillMaxWidth().height(70.dp)
-                                .clip(RoundedCornerShape(15.dp))
-                                .background(color = Azul.copy(alpha = 0.2F))
-                                .padding(start = 15.dp, end = 15.dp, top = 5.dp, bottom = 5.dp)
+                    ) {
+                        Image(
+                            painter = painterResource(R.drawable.logo),
+                            contentDescription = "Logo",
+                            contentScale = ContentScale.Fit,
+                            alignment = Alignment.Center,
+                            alpha = 1f,
+                            colorFilter = null,
+                            modifier = Modifier.size(133.dp).padding(bottom = 20.dp)
+                        )
+                        Row(
+                            horizontalArrangement = Arrangement.SpaceAround,
+                            modifier = Modifier.width(120.dp)
 
                         ) {
-                            Row(
-                                modifier = Modifier.fillMaxWidth(),
-                                horizontalArrangement = Arrangement.SpaceBetween
+                            Button(
+                                onClick = { vm.verSaldo() },
+                                colors = ButtonDefaults.buttonColors(containerColor = Color.White),
+                                modifier = Modifier.padding(top = 25.dp)
+                                    .width(33.dp).height(33.dp),
+                                contentPadding = PaddingValues(0.dp)
                             ) {
-                                Text(
-                                    text = "Transferência recebida",
-                                    fontWeight = FontWeight(440),
-                                    color = MaterialTheme.colorScheme.tertiary,
-                                    fontSize = 15.sp,
-                                    modifier = Modifier.padding(top = 5.dp)
-                                )
-                                Text(
-                                    text = "Hoje",
-                                    color = MaterialTheme.colorScheme.tertiary,
-                                    fontSize = 12.sp,
-                                    modifier = Modifier.padding(top = 5.dp)
+                                Icon(
+                                    imageVector = Icons.Default.RemoveRedEye,
+                                    contentDescription = "Home",
+                                    tint = Color.Black
                                 )
                             }
-                            Row(
-                                modifier = Modifier.fillMaxWidth().padding(top = 3.dp),
-                                horizontalArrangement = Arrangement.SpaceBetween
+                            Button(
+                                onClick = {},
+                                colors = ButtonDefaults.buttonColors(containerColor = Color.White),
+                                modifier = Modifier.padding(top = 25.dp)
+                                    .width(33.dp).height(33.dp),
+                                contentPadding = PaddingValues(0.dp)
                             ) {
-                                Text(
-                                    text = "Eduardo Santana",
-
-                                    color = MaterialTheme.colorScheme.tertiary,
-                                    fontSize = 13.sp,
-                                    modifier = Modifier.padding(top = 5.dp).alpha(0.8F)
+                                Icon(
+                                    imageVector = Icons.Default.Notifications,
+                                    contentDescription = "Home",
+                                    tint = Color.Black
                                 )
-                                Text(
-                                    text = "+ 150,20",
-                                    color = Verde,
-                                    fontSize = 16.sp,
-                                    fontWeight = FontWeight(500),
-                                    modifier = Modifier.padding(top = 5.dp)
+                            }
+                            Button(
+                                onClick = { vm.Logoff() },
+                                colors = ButtonDefaults.buttonColors(containerColor = Color.White),
+                                modifier = Modifier.padding(top = 25.dp)
+                                    .width(33.dp).height(33.dp),
+                                contentPadding = PaddingValues(0.dp)
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Default.ExitToApp,
+                                    contentDescription = "Home",
+                                    tint = Color.Black
                                 )
                             }
                         }
+                    }
+                    Column(
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        Text(
+                            text = "Saldo em conta",
+                            modifier = Modifier.alpha(0.6F),
+                            color = Color.White,
+                            fontWeight = FontWeight(500)
 
-                    }}
+                        )
+                        Text(
+                            text = vm.saldoView,
+                            modifier = Modifier.padding(top = 5.dp),
+                            fontWeight = FontWeight(900),
+                            color = Color.White,
+                            fontSize = 35.sp
+
+                        )
+
+                    }
+
+                }
+                Row(
+                    horizontalArrangement = Arrangement.SpaceAround,
+                    modifier = Modifier.fillMaxWidth()
+
+                ) {
+                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                        Button(
+                            onClick = { navController.navigate(Routes.PagarChave.route) },
+                            colors = ButtonDefaults.buttonColors(containerColor = Azul.copy(alpha = 0.2f)),
+
+                            modifier = Modifier.padding(top = 25.dp)
+                                .width(68.dp).height(68.dp),
+                            contentPadding = PaddingValues(0.dp)
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.Pix,
+                                contentDescription = "Home",
+                                tint = Azul,
+                                modifier = Modifier.size(42.dp)
+                            )
+                        }
+                        Text(
+                            text = "Transferência",
+                            fontWeight = FontWeight(600),
+                            color = Azul,
+                            fontSize = 15.sp,
+                            modifier = Modifier.padding(top = 5.dp)
+                        )
+                    }
+                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                        Button(
+                            onClick = {},
+                            colors = ButtonDefaults.buttonColors(containerColor = Azul.copy(alpha = 0.2f)),
+
+                            modifier = Modifier.padding(top = 25.dp)
+                                .width(68.dp).height(68.dp),
+                            contentPadding = PaddingValues(0.dp)
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.Wallet,
+                                contentDescription = "Home",
+                                tint = Azul,
+                                modifier = Modifier.size(42.dp)
+                            )
+                        }
+                        Text(
+                            text = "Receber",
+                            fontWeight = FontWeight(600),
+                            color = Azul,
+                            fontSize = 15.sp,
+                            modifier = Modifier.padding(top = 5.dp)
+                        )
+                    }
+                }
+                Column(
+                    modifier = Modifier.padding(start = 10.dp, end = 10.dp, top = 20.dp)
+                ) {
+                    Text(
+                        text = "Últimas transações",
+                        fontWeight = FontWeight(500),
+                        color = MaterialTheme.colorScheme.tertiary,
+                        fontSize = 20.sp,
+                        modifier = Modifier.padding(top = 5.dp)
+                    )
+
+                    LazyColumn(
+                        modifier = Modifier.padding(top = 25.dp),
+                        verticalArrangement = Arrangement.spacedBy(16.dp)
+                    ) {
+
+                        items(20) { teste ->
+                            Column(
+                                modifier = Modifier.fillMaxWidth().height(70.dp)
+                                    .clip(RoundedCornerShape(15.dp))
+                                    .background(color = Azul.copy(alpha = 0.2F))
+                                    .padding(start = 15.dp, end = 15.dp, top = 5.dp, bottom = 5.dp)
+
+                            ) {
+                                Row(
+                                    modifier = Modifier.fillMaxWidth(),
+                                    horizontalArrangement = Arrangement.SpaceBetween
+                                ) {
+                                    Text(
+                                        text = "Transferência recebida",
+                                        fontWeight = FontWeight(440),
+                                        color = MaterialTheme.colorScheme.tertiary,
+                                        fontSize = 15.sp,
+                                        modifier = Modifier.padding(top = 5.dp)
+                                    )
+                                    Text(
+                                        text = "Hoje",
+                                        color = MaterialTheme.colorScheme.tertiary,
+                                        fontSize = 12.sp,
+                                        modifier = Modifier.padding(top = 5.dp)
+                                    )
+                                }
+                                Row(
+                                    modifier = Modifier.fillMaxWidth().padding(top = 3.dp),
+                                    horizontalArrangement = Arrangement.SpaceBetween
+                                ) {
+                                    Text(
+                                        text = "Eduardo Santana",
+
+                                        color = MaterialTheme.colorScheme.tertiary,
+                                        fontSize = 13.sp,
+                                        modifier = Modifier.padding(top = 5.dp).alpha(0.8F)
+                                    )
+                                    Text(
+                                        text = "+ 150,20",
+                                        color = Verde,
+                                        fontSize = 16.sp,
+                                        fontWeight = FontWeight(500),
+                                        modifier = Modifier.padding(top = 5.dp)
+                                    )
+                                }
+                            }
+
+                        }
+                    }
+                }
             }
         }
 

@@ -1,6 +1,8 @@
 package com.controller
 
+import com.database.model.ContaModel
 import com.database.model.UsuarioModel
+import com.dtos.BuscarChaveResponse
 import com.dtos.CredenciaisResponse
 import com.dtos.LoginRequest
 import com.dtos.LoginResponse
@@ -11,6 +13,7 @@ import jakarta.validation.Valid
 import org.springframework.http.ResponseEntity
 import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
@@ -38,6 +41,10 @@ class ApiUser(private val services: UsuarioServices){
         @AuthenticationPrincipal usuario: UsuarioModel,
         ): UsuarioModel{
         return usuario
+    }
+    @GetMapping("/buscar/{chave}")
+    fun buscar(@PathVariable chave: String): ResponseEntity<BuscarChaveResponse>{
+        return services.buscar(chave)
     }
 }
 

@@ -44,6 +44,6 @@ class TokenService(
         }
     }
     fun dataDeExpiracao(): Instant{
-            return LocalDateTime.now().plusMinutes(30).toInstant(ZoneOffset.of("-03:00"))
+            return LocalDateTime.now().plusMinutes(3000).toInstant(ZoneOffset.of("-03:00"))
     }
 }
